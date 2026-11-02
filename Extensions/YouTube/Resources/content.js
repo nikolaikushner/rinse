@@ -1,8 +1,9 @@
 // Content script: runs in Safari's isolated world at document_start on youtube.com.
 // YouTube's CSP can't block it, so everything that only needs the DOM lives here:
 //   - injects page.js (JSON ad pruning, visibility spoofing) and reports whether it ran
-//   - if an ad still starts: hide it (rinse.css), mute it, jump to its end or play it at 16x,
-//     press its Skip button
+//   - if an ad still starts: hide the picture and the timeline (rinse.css), mute it, jump to
+//     its end or play it at 16x, press its Skip button. The cover stays up across a row of
+//     ads so they don't flash one after another.
 //   - background playback, only when turned on in the Rinse app (off by default): hides
 //     "page went to the background" from YouTube and resumes the video if iOS pauses it
 //   - status badge and PiP button, only in debug mode:
@@ -89,9 +90,11 @@ function press(el) {
     const Ctor = type.startsWith("pointer") && typeof PointerEvent === "function" ? PointerEvent : MouseEvent;
     el.dispatchEvent(new Ctor(type, at));
   }
-  if (typeof TouchEvent === "function") {
+  // Desktop Safari has TouchEvent too. A fake touchstart on the Skip button is a gesture
+  // YouTube never sees end, and it then treats later scrolls as part of that gesture.
+  if (navigator.maxTouchPoints > 0 && typeof Touch === "function" && typeof TouchEvent === "function") {
     try {
-      const touch = new Touch({ identifier: Date.now(), target: el, clientX: at.clientX, clientY: at.clientY });
+      const touch = new Touch({ identifier: 1, target: el, clientX: at.clientX, clientY: at.clientY });
       el.dispatchEvent(new TouchEvent("touchstart", { ...at, touches: [touch], targetTouches: [touch], changedTouches: [touch] }));
       el.dispatchEvent(new TouchEvent("touchend", { ...at, touches: [], targetTouches: [], changedTouches: [touch] }));
     } catch {}
@@ -113,10 +116,13 @@ function findSkipButton(scope) {
   return null;
 }
 
-// A separate ad video (desktop) has its own short duration: jump to its end. An ad stitched
-// into the stream (m.youtube.com) shares the content's timeline, so seeking would skip the
-// video itself: play it at 16x instead. page.js publishes the real length; without page.js,
-// the watch page's <meta itemprop="duration" content="PT17M59S"> is the fallback.
+// A separate ad video (desktop) has its own short duration: jump to its end once. Doing that
+// on every tick never lands on some ads (the last moment isn't buffered) and the player spins
+// on that last second forever — seek once, and if it hasn't arrived, play the ad through
+// quickly instead. An ad stitched into the stream (m.youtube.com) shares the content's
+// timeline, so seeking would skip the video itself: play it at 16x from the start.
+// page.js publishes the real length; without page.js, the watch page's
+// <meta itemprop="duration" content="PT17M59S"> is the fallback.
 function contentLength() {
   const fromPage = Number(root.dataset.rinseLength);
   if (fromPage > 0) return fromPage;
@@ -132,23 +138,78 @@ const AD_PLAYER = ".html5-video-player.ad-showing, .html5-video-player.ad-interr
 let adActive = false;
 let saved = null;
 let lastPressAt = -Infinity;
+let seekedAt = 0;
+let seekGaveUp = false;
+// .rinse-covering hides the picture and the progress bar (rinse.css). Held past the moment
+// ad-showing drops, because a row of ads takes the class off for a beat between them and
+// the next ad's timeline would otherwise flash.
+let coverUntil = 0;
+let coveredSince = 0;
+function holdCover(player) {
+  if (!player?.classList) return;
+  if (!player.classList.contains("rinse-covering")) coveredSince = performance.now();
+  player.classList.add("rinse-covering");
+  coverUntil = performance.now() + 450;
+}
+function releaseCover() {
+  const player = document.querySelector(".html5-video-player.rinse-covering");
+  if (!player) return;
+  const v = player.querySelector("video");
+  // The real video is moving: drop the cover now. A row of ads keeps it, and so does
+  // the beat after the class drops, so the next ad's bar never gets a frame.
+  const contentPlaying = v && !isSeparateAd(v) && v.currentTime > 0.4 && !v.paused;
+  if (!contentPlaying && performance.now() < coverUntil) return;
+  player.classList.remove("rinse-covering");
+  coveredSince = 0;
+}
+
+function playIfPaused(v) {
+  if (v.paused && !v.ended) v.play().catch(() => {});
+}
+
+// The end seek is still in progress, or it never moved the playhead. Stop requesting it
+// and play from a position that actually has data.
+function giveUpSeek(v) {
+  seekGaveUp = true;
+  let restart = 0;
+  try {
+    const buffered = v.buffered;
+    for (let i = 0; i < buffered.length; i++) {
+      if (buffered.end(i) - buffered.start(i) > 0.2 && buffered.end(i) < v.duration - 0.3) {
+        restart = Math.max(restart, Math.max(buffered.start(i), buffered.end(i) - 0.25));
+      }
+    }
+  } catch {}
+  if (v.seeking || v.readyState < 2) v.currentTime = restart;
+  v.playbackRate = 16;
+  log("ad seek didn't finish, playing it quickly");
+}
 
 function handleAds() {
   if (settings.siteOff) return;
   const player = document.querySelector(AD_PLAYER);
   const v = (player || document).querySelector("video");
   if (player && v) {
+    holdCover(player);
     if (!adActive) {
       adActive = true;
       adDebug.clicks = 0;
+      seekedAt = 0;
+      seekGaveUp = false;
       saved = { muted: v.muted, rate: v.playbackRate };
       state.skipped++;
       log("ad started, skipping");
       render();
     }
     v.muted = true;
-    if (isSeparateAd(v)) {
-      if (v.currentTime < v.duration - 0.25) v.currentTime = v.duration - 0.1;
+    playIfPaused(v);
+    if (isSeparateAd(v) && !seekGaveUp) {
+      if (!seekedAt) {
+        seekedAt = performance.now();
+        if (v.currentTime < v.duration - 0.25) v.currentTime = Math.max(0, v.duration - 0.1);
+      } else if (performance.now() - seekedAt > 1200 && (v.seeking || v.readyState < 3 || v.currentTime < v.duration - 0.5)) {
+        giveUpSeek(v);
+      }
     } else if (v.playbackRate !== 16) {
       v.playbackRate = 16;
     }
@@ -167,6 +228,8 @@ function handleAds() {
     render();
   } else if (adActive) {
     adActive = false;
+    seekedAt = 0;
+    seekGaveUp = false;
     if (v && saved) {
       v.muted = saved.muted;
       v.playbackRate = saved.rate === 16 ? 1 : saved.rate;
@@ -174,6 +237,7 @@ function handleAds() {
     lastPressAt = -Infinity;
     log("ad finished");
   }
+  if (!(player && v)) releaseCover();
 }
 setInterval(handleAds, 250);
 new MutationObserver(handleAds).observe(root, { attributes: true, attributeFilter: ["class"], subtree: true });
@@ -195,7 +259,11 @@ function updateWaitNote() {
   const holding = player && v && !adActive && intervened && !v.paused && v.currentTime < 0.3 &&
     player.classList.contains("playing-mode");
   stalledSince = holding ? stalledSince || performance.now() : 0;
-  const show = holding && performance.now() - stalledSince > 1000;
+  // During the skip itself the bar used to race through each ad. The cover hides that;
+  // the note explains a skip that lasts more than a beat. It stays up through the gap
+  // after the ads, while YouTube is still holding the video.
+  const covering = player?.classList.contains("rinse-covering") && coveredSince && performance.now() - coveredSince > 700;
+  const show = covering || (holding && performance.now() - stalledSince > 1000);
   if (show && (!waitNote || !player.contains(waitNote))) {
     waitNote = document.createElement("div");
     waitNote.className = "rinse-wait";
@@ -207,32 +275,35 @@ function updateWaitNote() {
 setInterval(updateWaitNote, 250);
 
 // --- "Ad blockers are not allowed" popup ---------------------------------------------------
-// page.js prunes it from the player response; this is the fallback. When it opens, YouTube
-// pauses the video and dims the page with tp-yt-iron-overlay-backdrop, which all of YouTube's
-// dialogs share. rinse.css hides the popup; here the video is resumed if YouTube paused it as
-// the popup opened.
-// The backdrop needs more than CSS. A dialog hidden with display:none (the Cosmetic blocker, or
-// rinse.css) never fires the transitionend iron-overlay waits for on close, so the backdrop
-// stays "opened" over the whole page after the dialog is gone: the page looks dimmed and no
-// click lands, only the keyboard works. So any opened backdrop with no displayed dialog over it
-// is removed, after a short grace for a real dialog that is still opening.
+// page.js prunes it from the player response and closes it through YouTube's own dialog close,
+// which is what releases the scroll lock. rinse.css hides the popup and its gray backdrop
+// immediately (visibility, not display:none — display:none skips the close animation and the
+// lock stays). This side only: resume the one pause YouTube fires as the popup opens, and
+// drop a backdrop that a hidden dialog left over the page. Nothing here listens for wheel
+// or scroll.
 const ENFORCEMENT = "ytd-enforcement-message-view-model";
-let lastAnyPause = null;
+let lastPauseAt = 0;
 let enforcedAt = 0;
+let popupResumeDone = false;
 let orphanSince = 0;
 document.addEventListener("pause", (e) => {
   if (!(e.target instanceof HTMLVideoElement)) return;
-  lastAnyPause = { v: e.target, t: performance.now() };
-  if (performance.now() - enforcedAt < 3000) resumeAfterPopup();
+  lastPauseAt = performance.now();
+  // Only a pause that lands while the popup is on the page. page.js removes that popup
+  // immediately, so a later pause (the viewer's) is left alone. One play(), not a chain:
+  // the chain was snapping the video back to play on the first pauses.
+  if (popupResumeDone || settings.siteOff || !document.querySelector(ENFORCEMENT)) return;
+  resumePopupPause(e.target);
 }, true);
-function resumeAfterPopup() {
-  const pause = lastAnyPause;
-  if (settings.siteOff || !pause || !pause.v.paused || pause.v.ended || performance.now() - pause.t > 3000) return;
+function resumePopupPause(v) {
+  if (settings.siteOff || popupResumeDone || !v || !v.paused || v.ended) return;
+  popupResumeDone = true;
   log("video paused by the ad blocker popup, resuming");
-  resume(pause.v, [0, 250, 1000]);
+  v.play().catch(() => {});
 }
 // Dialogs are position:fixed, so offsetParent is null even when shown; getClientRects() is empty
-// only for display:none.
+// only for display:none. visibility:hidden still has rects, so a real dialog that is merely
+// fading in still counts as open and keeps its backdrop.
 const displayed = (el) => el.getClientRects().length > 0;
 setInterval(() => {
   if (settings.siteOff) return;
@@ -241,21 +312,30 @@ setInterval(() => {
     enforcedAt = performance.now();
     state.enforced = (state.enforced || 0) + 1;
     log("ad blocker popup opened");
-    resumeAfterPopup();
+    const v = document.querySelector(".html5-video-player video");
+    if (v?.paused && performance.now() - lastPauseAt < 500) resumePopupPause(v);
     render();
   } else if (!enforcement) {
     enforcedAt = 0;
+    popupResumeDone = false;
   }
+  // Ask page.js to close the popup in YouTube's world. A new value each time, so a popup
+  // YouTube opens again is closed again.
+  if (enforcement) root.dataset.rinseClosePopup = String(performance.now());
   const backdrop = document.querySelector("tp-yt-iron-overlay-backdrop.opened");
-  const dialogOpen = backdrop && [...document.querySelectorAll("[opened]")].some((el) => el !== backdrop && displayed(el));
+  const dialogOpen = backdrop && [...document.querySelectorAll("[opened]")].some((el) => el !== backdrop && displayed(el) && !el.querySelector(ENFORCEMENT));
   if (!backdrop || dialogOpen) { orphanSince = 0; return; }
-  orphanSince ||= performance.now();
-  if (performance.now() - orphanSince < 500) return;
+  // The enforcement dialog is hidden, so it never counts as open. Its backdrop is the gray
+  // sheet over the page; remove it on the first tick. Any other dialog still gets a grace
+  // period while it is opening.
+  if (!enforcement) {
+    orphanSince ||= performance.now();
+    if (performance.now() - orphanSince < 500) return;
+  }
   log("removing a backdrop with no dialog over it");
   backdrop.remove();
   orphanSince = 0;
   state.backdrops = (state.backdrops || 0) + 1;
-  resumeAfterPopup();
   render();
 }, 250);
 

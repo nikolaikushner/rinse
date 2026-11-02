@@ -19,7 +19,6 @@ youtube.com##ytm-promoted-sparkles-web-renderer
 youtube.com##ad-slot-renderer
 youtube.com##ytm-companion-ad-renderer
 youtube.com##ytm-companion-slot
-youtube.com##tp-yt-paper-dialog:has(ytd-enforcement-message-view-model)
 !
 ! quickcore.fun: full-page casino branding network (seen on HDrezka mirrors, 2026-10-24).
 ! Markup: body.has-brand > div#brnd…[position:fixed] > iframe#ibrnd… src=//s.quickcore.fun/iframeHS/…,

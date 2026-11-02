@@ -110,5 +110,68 @@
     document.addEventListener(ev, swallow, true);
   }
 
+  // "Ad blockers are not allowed". YouTube locks page scroll while this dialog is open and
+  // only releases it when the dialog finishes closing (its exit animation) or detaches.
+  // Tell it to close, then fire the events that finish that close, then drop the node so it
+  // cannot reopen and take the lock again. This does not listen for scroll or wheel.
+  function finishOverlayClose(node) {
+    try { if (typeof node.close === "function") node.close(); } catch {}
+    try { node.opened = false; } catch {}
+    try { node.removeAttribute("opened"); } catch {}
+    for (const type of ["transitionend", "webkitTransitionEnd"]) {
+      try { node.dispatchEvent(new Event(type, { bubbles: true })); } catch {}
+    }
+    try { node.dispatchEvent(new CustomEvent("neon-animation-finish", { bubbles: true })); } catch {}
+  }
+  function dropEnforcementBackdrop() {
+    const otherDialog = [...document.querySelectorAll("[opened]")].some((el) =>
+      el.localName !== "tp-yt-iron-overlay-backdrop" &&
+      !el.querySelector?.("ytd-enforcement-message-view-model") &&
+      el.getClientRects().length > 0);
+    if (otherDialog) return;
+    document.querySelector("tp-yt-iron-overlay-backdrop.opened")?.remove();
+    for (const el of [document.documentElement, document.body, document.querySelector("ytd-app")]) {
+      if (!el?.style) continue;
+      if (el.style.overflow === "hidden") el.style.overflow = "";
+      if (el.style.overflowY === "hidden") el.style.overflowY = "";
+      if (el.style.position === "fixed") {
+        el.style.position = "";
+        el.style.top = "";
+        el.style.left = "";
+        el.style.right = "";
+        el.style.width = "";
+      }
+    }
+  }
+  function closeEnforcementOverlays() {
+    if (root.dataset.rinseOff === "1") return;
+    const views = [...document.querySelectorAll("ytd-enforcement-message-view-model")];
+    if (!views.length) return;
+    for (const view of views) {
+      const dialog = view.closest("tp-yt-paper-dialog");
+      if (dialog) finishOverlayClose(dialog);
+      try { view.remove(); } catch {}
+      if (dialog?.isConnected) {
+        try { dialog.remove(); } catch {}
+      }
+    }
+    dropEnforcementBackdrop();
+    requestAnimationFrame(dropEnforcementBackdrop);
+    log("closed the ad blocker popup");
+  }
+  new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === "attributes") { closeEnforcementOverlays(); return; }
+      for (const n of m.addedNodes) {
+        if (n.nodeType !== 1) continue;
+        if (n.localName === "ytd-enforcement-message-view-model" || n.querySelector?.("ytd-enforcement-message-view-model")) {
+          closeEnforcementOverlays();
+          return;
+        }
+      }
+    }
+  }).observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-rinse-close-popup"] });
+  closeEnforcementOverlays();
+
   log("page script installed", location.href);
 })();

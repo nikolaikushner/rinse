@@ -1,26 +1,48 @@
 /* Injected by Safari with content.js (not subject to YouTube's CSP).
-   If an ad still starts, content.js mutes and skips it within a fraction of a second; this
-   keeps it from being seen meanwhile. Opacity, not display:none, so the Skip button stays
-   clickable and the player keeps its layout. Nothing applies when the user turned Rinse off
-   on youtube.com (content.js sets data-rinse-off). */
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing video,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-interrupting video,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing .video-ads,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing .ytp-ad-module,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing .ytp-ad-player-overlay,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing .ytp-ad-player-overlay-layout,
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing .ytp-ad-overlay-container {
+   If an ad still starts, content.js mutes and skips it. This keeps the picture, the ad
+   chrome and the progress bar hidden while that happens, including the gap between ads
+   in a row (content.js holds .rinse-covering on the player). Opacity, not display:none,
+   so the Skip button stays clickable and the player keeps its layout. Nothing applies
+   when the user turned Rinse off on youtube.com (content.js sets data-rinse-off). */
+html:not([data-rinse-off="1"]) .html5-video-player:is(.ad-showing, .ad-interrupting, .rinse-covering) :is(
+  video,
+  .video-ads,
+  .ytp-ad-module,
+  .ytp-ad-player-overlay,
+  .ytp-ad-player-overlay-layout,
+  .ytp-ad-overlay-container,
+  .ytp-ad-progress-list,
+  .ytp-ad-persistent-progress,
+  .ytp-chrome-bottom,
+  .ytp-chrome-top,
+  .ytp-gradient-bottom,
+  .ytp-gradient-top,
+  .ytp-spinner,
+  .ytp-bezel,
+  .ytp-pause-overlay,
+  .ytp-cued-thumbnail-overlay,
+  .ytp-caption-window-container,
+  .caption-window
+) {
   opacity: 0 !important;
 }
-html:not([data-rinse-off="1"]) .html5-video-player.ad-showing {
+html:not([data-rinse-off="1"]) .html5-video-player:is(.ad-showing, .ad-interrupting, .rinse-covering) {
   background: #000 !important;
 }
+/* m.youtube.com draws its bar in this host, next to the player, not inside it. */
+html:not([data-rinse-off="1"]):has(.html5-video-player:is(.ad-showing, .ad-interrupting, .rinse-covering)) ytm-custom-control {
+  opacity: 0 !important;
+}
 
-/* "Ad blockers are not allowed" popup (fallback for page.js pruning it). Only the popup: its
-   backdrop is removed by content.js, because a backdrop left behind a hidden dialog never closes
-   and blocks every click on the page. */
-html:not([data-rinse-off="1"]) tp-yt-paper-dialog:has(ytd-enforcement-message-view-model) {
-  display: none !important;
+/* "Ad blockers are not allowed" popup (fallback for page.js pruning it). visibility, not
+   display:none: display:none skips the dialog's close animation, and YouTube keeps the page
+   scroll lock until that animation finishes. The backdrop is the gray sheet over the page;
+   hide it in the same instant so it never flashes while page.js closes the dialog. */
+html:not([data-rinse-off="1"]) tp-yt-paper-dialog:has(ytd-enforcement-message-view-model),
+html:not([data-rinse-off="1"]) ytd-popup-container:has(ytd-enforcement-message-view-model) tp-yt-iron-overlay-backdrop {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* "Ad skipped" note: shown by content.js while YouTube holds the video back after a skipped or

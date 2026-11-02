@@ -16,9 +16,15 @@ function scenario({ videoLength, adDuration, metaDuration }) {
   const skipButton = button(" Skip ", true, () => skipClicks++);
   const navButton = button("Skip navigation", false, () => navClicks++);
   let adShowing = true;
+  const classes = new Set();
   const player = {
     querySelector: (s) => (s === "video" ? video : null),
     querySelectorAll: () => (adShowing ? [skipButton] : []),
+    classList: {
+      contains: (c) => classes.has(c),
+      add: (c) => classes.add(c),
+      remove: (c) => classes.delete(c),
+    },
   };
   const intervals = [];
   const document = {
@@ -48,13 +54,14 @@ function scenario({ videoLength, adDuration, metaDuration }) {
     MutationObserver: class { observe() {} },
     HTMLVideoElement: class {},
     MouseEvent: class { constructor(type) { this.type = type; } },
+    navigator: { maxTouchPoints: 0 },
   };
   vm.createContext(ctx);
   vm.runInContext(readFileSync(new URL("../../../Extensions/YouTube/Resources/content.js", import.meta.url), "utf8"), ctx);
 
   const tick = () => intervals.forEach((f) => f());
   tick(); tick(); tick();  // three ticks within the same second: one press
-  const during = { muted: video.muted, rate: video.playbackRate, t: video.currentTime, skipClicks, navClicks };
+  const during = { muted: video.muted, rate: video.playbackRate, t: video.currentTime, skipClicks, navClicks, cover: classes.has("rinse-covering") };
   adShowing = false;
   tick();
   return { during, after: { muted: video.muted, rate: video.playbackRate } };
@@ -71,6 +78,7 @@ const checks = {
   "stitched ad at 16x": stitched.during.rate === 16,
   "stitched ad not seeked": stitched.during.t === 1,
   "Skip pressed once": separate.during.skipClicks === 1,
+  "player covered while the ad plays": separate.during.cover && stitched.during.cover,
   "without page.js, meta length still lets it jump": fromMeta.during.t > 61 && fromMeta.during.rate === 1,
   "Skip navigation never pressed": separate.during.navClicks === 0 && stitched.during.navClicks === 0,
   "sound and speed restored": !separate.after.muted && separate.after.rate === 1 && !stitched.after.muted && stitched.after.rate === 1,
