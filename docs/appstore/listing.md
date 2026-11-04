@@ -8,6 +8,7 @@ Copy-paste source for App Store Connect. Field limits are Apple's; counts are ch
 | Field | Value |
 |---|---|
 | App Store Connect record | Apple ID **6827144226**, created 2026-10-26, iOS + macOS, version 1.0 |
+| Availability | **macOS live** since 2026-11-04 ([Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12), macOS 15+). iPhone and iPad still in review |
 | Bundle ID | `com.nikolaikushner.rinse` (iOS + macOS, Universal Purchase) |
 | SKU | `rinse` |
 | Primary category | Utilities |

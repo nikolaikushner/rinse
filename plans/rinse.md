@@ -23,7 +23,7 @@
 - [ ] Тест [d3ward adblock test](https://d3ward.github.io/toolz/adblock.html) ≥ 90% в Safari на iPhone и Mac при включённых блокерах.
 - [ ] Все блокеры компилируются Safari без ошибок; перезагрузка всех правил на iPhone занимает ≤ 10 с.
 - [ ] Для Content Blocker'ов не нужно разрешение «Доступ ко всем сайтам». Веб-расширение просит доступ только к `youtube.com`.
-- [ ] Приложение принято в App Store (или хотя бы во внешний TestFlight-бета-тест).
+- [x] macOS: версия 1.0 в Mac App Store с 4 ноября 2026 (Apple ID 6827144226, $1.99, macOS 15+). iPhone и iPad ещё на проверке.
 
 ## Не делаем
 
@@ -181,7 +181,9 @@ filters/sources.json                URL, лицензии и закреплён�
 
 ### 10. Готовность к App Store — S · `[~]`
 
-> **2026-10-26:** запись в App Store Connect (Apple ID 6827144226, «Rinse: Ad Blocker for Safari»), карточка и заметки для ревью в `docs/appstore/`, 22 скриншота. Сборки **1.0 (1) iOS и macOS загружены в TestFlight** через `scripts/release.sh`. На macOS App Store Connect требует `NSHumanReadableDescription` у каждого блокера — добавлено. Осталось: внутреннее тестирование в TestFlight, заполнить карточку в App Store Connect, отправить на ревью.
+> **2026-11-04:** macOS 1.0 вышел в Mac App Store: [Rinse: Ad Blocker for Safari](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12), $1.99, macOS 15+, только Mac. iPhone и iPad ещё на проверке. Сайт `site/` ведёт на скачивание.
+>
+> **2026-10-26:** запись в App Store Connect (Apple ID 6827144226, «Rinse: Ad Blocker for Safari»), карточка и заметки для ревью в `docs/appstore/`, 22 скриншота. Сборки **1.0 (1) iOS и macOS загружены в TestFlight** через `scripts/release.sh`. На macOS App Store Connect требует `NSHumanReadableDescription` у каждого блокера — добавлено.
 
 
 - **Файлы:** `App/Assets.xcassets/AppIcon`, `extension/icons/*` → `Extensions/YouTube/icons/*`, `App/PrivacyInfo.xcprivacy`, `docs/appstore/{description.ru.md,description.en.md,review-notes.md}`, `LICENSES.md` (EasyList и Fanboy — CC BY-SA 3.0, с атрибуцией).

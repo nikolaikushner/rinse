@@ -47,12 +47,12 @@ a:hover { text-decoration: underline; }
 .hero img { width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 10px 30px rgba(10, 132, 255, 0.25); }
 .hero h1 { font-size: clamp(34px, 7vw, 52px); line-height: 1.08; letter-spacing: -0.02em; margin: 24px 0 12px; }
 .hero p.lead { font-size: 20px; color: var(--muted); margin: 0 auto 28px; max-width: 34em; }
-.pill {
-  display: inline-block; padding: 11px 22px; border-radius: 999px; font-weight: 600;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: #fff;
-}
-.pill:hover { text-decoration: none; opacity: 0.92; }
-.small { font-size: 14px; color: var(--muted); }
+.store { margin: 0 0 18px; }
+.store a { display: inline-block; line-height: 0; }
+.store a:hover { text-decoration: none; opacity: 0.88; }
+.store img { width: 188px; height: auto; }
+.small { font-size: 14px; color: var(--muted); margin: 0 auto; max-width: 36em; }
+.top nav a.download { color: var(--accent); font-weight: 600; }
 
 /* Features */
 .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 24px 0 56px; }

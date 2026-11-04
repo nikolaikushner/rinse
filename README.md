@@ -14,11 +14,13 @@
   <img alt="Safari" src="https://img.shields.io/badge/Safari-Web%20Extension%20%2B%20Content%20Blockers-1ec8e6">
   <img alt="Rules" src="https://img.shields.io/badge/rules-143k-34c759">
   <img alt="Swift" src="https://img.shields.io/badge/Swift-SwiftUI-f05138">
-  <img alt="Status" src="https://img.shields.io/badge/status-alpha-orange">
+  <img alt="Mac App Store" src="https://img.shields.io/badge/Mac%20App%20Store-v1.0%20%C2%B7%20%241.99-0a84ff">
   <img alt="License" src="https://img.shields.io/badge/license-GPL--3.0-blue">
 </p>
 
 ---
+
+Rinse 1.0 is on the [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) for macOS 15 and later ($1.99, one time). iPhone and iPad are still in review; the same purchase will cover them.
 
 Rinse is a Safari extension app in the spirit of [Vinegar](https://andadinosaur.com/vinegar), with a site-wide ad blocker built in.
 
@@ -159,18 +161,18 @@ To see Rinse's state on a YouTube page, run `localStorage.setItem("rinse-debug",
 
 ## Status and limitations
 
-Rinse is alpha: tested on an iPhone 14 Plus and a Mac, not yet on iPad.
+Rinse 1.0 is on the Mac App Store. It has been tested on an iPhone 14 Plus and a Mac, and not yet on iPad. iPhone and iPad are not in the store yet.
 
 - **Content blockers can only hide or block.** They can't rewrite styles, so a site that reserves space for an ad (such as the empty strip above HDrezka's header) keeps the gap.
 - **No scriptlets.** Filters that need JavaScript on arbitrary sites are skipped, because running scripts everywhere would require "access to all websites".
 - **Fragile by nature.** YouTube changes often. When it breaks, `page.js` and `content.js` fall back to YouTube's normal player rather than a black screen.
 - **Updates ship with the app.** Filter lists update with app releases; there are no on-device updates yet.
 
-See [plans/rinse.md](plans/rinse.md) for the roadmap: an element picker ("hide this"), a per-site allowlist, Shorts, embedded players and an App Store release.
+See [plans/rinse.md](plans/rinse.md) for the roadmap: an element picker ("hide this"), a per-site allowlist, Shorts, embedded players, and the iPhone and iPad release.
 
 ## Price
 
-Rinse will be on the App Store for **$1.99**, a one-time purchase that covers iPhone, iPad and Mac. That pays for the developer account and the time spent keeping up with YouTube. The source stays open: you're welcome to build it yourself for free.
+On the Mac App Store, Rinse is **$1.99**, a one-time purchase. The same purchase is set up to cover iPhone and iPad when those versions are approved. That pays for the developer account and the time spent keeping up with YouTube. The source stays open: you're welcome to build it yourself for free.
 
 ## License
 
@@ -187,6 +189,8 @@ Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or G
 <details>
 <summary><b>По-русски</b></summary>
 
+**Rinse 1.0** уже в [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) для macOS 15 и новее ($1,99, разовая покупка). iPhone и iPad ещё на проверке.
+
 **Rinse** — набор расширений Safari для iPhone, iPad и Mac.
 
 - **YouTube без рекламы.** Рекламные данные вырезаются из ответов плеера. Если реклама всё-таки появляется, она идёт без звука на скорости ×16 и пропускается автоматически.
@@ -196,6 +200,6 @@ Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or G
 
 Сборка: `scripts/run.sh mac` или `scripts/run.sh ios`. Затем включите все четыре расширения в настройках Safari и один раз откройте приложение Rinse.
 
-**Цена и лицензия.** В App Store Rinse будет стоить $1,99, одна покупка на iPhone, iPad и Mac. Код открыт под GPL-3.0: его можно собрать самому бесплатно, а форки обязаны оставаться открытыми. Название «Rinse» и иконка под GPL не входят.
+**Цена и лицензия.** В Mac App Store Rinse стоит $1,99, разовая покупка. Та же покупка покроет iPhone и iPad, когда их версии одобрят. Код открыт под GPL-3.0: его можно собрать самому бесплатно, а форки обязаны оставаться открытыми. Название «Rinse» и иконка под GPL не входят.
 
 </details>
