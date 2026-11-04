@@ -13,7 +13,6 @@ Copy-paste source for App Store Connect. Field limits are Apple's; counts are ch
 | SKU | `rinse` |
 | Primary category | Utilities |
 | Secondary category | Productivity |
-| Price | $1.99 (Tier 2), one-time, all territories |
 | Copyright | 2026 Mikalai Kushner |
 | Privacy Policy URL | https://nikolaikushner.github.io/rinse/privacy.html |
 | Support URL | https://nikolaikushner.github.io/rinse/support.html |

@@ -49,7 +49,6 @@ Connect doesn't ask on every build. Rinse uses no encryption beyond what iOS/mac
 
 ## Pricing and availability
 
-- Price: **$1.99** (Tier 2), all territories.
 - Universal Purchase: iOS and macOS share bundle ID `com.nikolaikushner.rinse`, so one purchase covers both.
 - Small Business Program: not applied yet (decided 2026-10-26; can be done any time, cuts the commission to 15%).
 

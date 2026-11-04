@@ -14,13 +14,13 @@
   <img alt="Safari" src="https://img.shields.io/badge/Safari-Web%20Extension%20%2B%20Content%20Blockers-1ec8e6">
   <img alt="Rules" src="https://img.shields.io/badge/rules-143k-34c759">
   <img alt="Swift" src="https://img.shields.io/badge/Swift-SwiftUI-f05138">
-  <img alt="Mac App Store" src="https://img.shields.io/badge/Mac%20App%20Store-v1.0%20%C2%B7%20%241.99-0a84ff">
+  <img alt="Mac App Store" src="https://img.shields.io/badge/Mac%20App%20Store-v1.0-0a84ff">
   <img alt="License" src="https://img.shields.io/badge/license-sale%20by%20author%20only-blue">
 </p>
 
 ---
 
-Rinse 1.0 is on the [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) for macOS 15 and later ($1.99, one time). iPhone and iPad are still in review; the same purchase will cover them.
+Rinse 1.0 is on the [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) for macOS 15 and later. iPhone and iPad are still in review; the same purchase will cover them.
 
 Rinse is a Safari extension app in the spirit of [Vinegar](https://andadinosaur.com/vinegar), with a site-wide ad blocker built in.
 
@@ -170,10 +170,6 @@ Rinse 1.0 is on the Mac App Store. It has been tested on an iPhone 14 Plus and a
 
 See [plans/rinse.md](plans/rinse.md) for the roadmap: an element picker ("hide this"), a per-site allowlist, Shorts, embedded players, and the iPhone and iPad release.
 
-## Price
-
-On the Mac App Store, Rinse is **$1.99**, a one-time purchase. The same purchase is set up to cover iPhone and iPad when those versions are approved. That pays for the developer account and the time spent keeping up with YouTube. Only Mikalai Kushner may sell it. Anyone else may build it for personal use.
-
 ## License
 
 Copyright © 2026 Mikalai Kushner.
@@ -189,7 +185,7 @@ Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or G
 <details>
 <summary><b>По-русски</b></summary>
 
-**Rinse 1.0** уже в [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) для macOS 15 и новее ($1,99, разовая покупка). iPhone и iPad ещё на проверке.
+**Rinse 1.0** уже в [Mac App Store](https://apps.apple.com/app/rinse-ad-blocker-for-safari/id6827144226?mt=12) для macOS 15 и новее. iPhone и iPad ещё на проверке.
 
 **Rinse** — набор расширений Safari для iPhone, iPad и Mac.
 
@@ -200,6 +196,6 @@ Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or G
 
 Сборка: `scripts/run.sh mac` или `scripts/run.sh ios`. Затем включите все четыре расширения в настройках Safari и один раз откройте приложение Rinse.
 
-**Цена и лицензия.** В Mac App Store Rinse стоит $1,99, разовая покупка. Та же покупка покроет iPhone и iPad, когда их версии одобрят. Продавать Rinse и выкладывать его в магазин приложений может только автор. Себе собрать для личного пользования можно. Название «Rinse» и иконка в эту лицензию не входят. Списки EasyList, EasyPrivacy и RU AdList чужие, и их лицензии по-прежнему разрешают другим ими пользоваться.
+**Лицензия.** Та же покупка покроет iPhone и iPad, когда их версии одобрят. Продавать Rinse и выкладывать его в магазин приложений может только автор. Себе собрать для личного пользования можно. Название «Rinse» и иконка в эту лицензию не входят. Списки EasyList, EasyPrivacy и RU AdList чужие, и их лицензии по-прежнему разрешают другим ими пользоваться.
 
 </details>
