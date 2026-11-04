@@ -26,7 +26,7 @@ WHAT THE EXTENSIONS DO
 PRIVACY
 Rinse collects no data and makes no network requests of its own. Settings are stored on device in an App Group shared by the app and its extensions. Privacy policy: https://nikolaikushner.github.io/rinse/privacy.html
 
-Rinse is open source: https://github.com/nikolaikushner/rinse
+Source: https://github.com/nikolaikushner/rinse
 ```
 
 Sign-in required: **No**.

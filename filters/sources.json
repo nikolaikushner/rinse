@@ -4,7 +4,7 @@
     "easylist.txt": { "url": "https://easylist.to/easylist/easylist.txt", "license": "GPL-3.0 / CC BY-SA 3.0" },
     "easyprivacy.txt": { "url": "https://easylist.to/easylist/easyprivacy.txt", "license": "GPL-3.0 / CC BY-SA 3.0" },
     "advblock.txt": { "url": "https://easylist-downloads.adblockplus.org/advblock.txt", "license": "CC BY 3.0 (RU AdList)" },
-    "rinse.txt": { "license": "own" }
+    "rinse.txt": { "license": "Rinse Source License (sale reserved to the author)" }
   },
   "blockers": {
     "Ads": {

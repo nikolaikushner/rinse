@@ -14,7 +14,7 @@ Copy-paste source for App Store Connect. Field limits are Apple's; counts are ch
 | Primary category | Utilities |
 | Secondary category | Productivity |
 | Price | $1.99 (Tier 2), one-time, all territories |
-| Copyright | 2026 Nikolai Kushner |
+| Copyright | 2026 Mikalai Kushner |
 | Privacy Policy URL | https://nikolaikushner.github.io/rinse/privacy.html |
 | Support URL | https://nikolaikushner.github.io/rinse/support.html |
 | Marketing URL | https://nikolaikushner.github.io/rinse/ |
@@ -65,8 +65,8 @@ Blocking happens inside Safari's engine. Nothing extra runs on each page, so pag
 ONE PURCHASE, EVERY DEVICE
 Buy once and use Rinse on your iPhone, iPad and Mac. Filter lists are updated with each app update.
 
-OPEN SOURCE
-Rinse's code is public on GitHub under the GPL-3.0 license.
+SOURCE
+Rinse's source is public on GitHub. Only the author sells it.
 
 Setting up takes a minute: open Settings → Apps → Safari → Extensions (on Mac: Safari → Settings → Extensions) and turn on the four Rinse extensions. The app walks you through it.
 
@@ -118,8 +118,8 @@ Rinse for YouTube вырезает рекламу из видеоплеера е
 ОДНА ПОКУПКА ДЛЯ ВСЕХ УСТРОЙСТВ
 Купите один раз и пользуйтесь Rinse на iPhone, iPad и Mac. Списки фильтров обновляются вместе с приложением.
 
-ОТКРЫТЫЙ КОД
-Код Rinse открыт на GitHub под лицензией GPL-3.0.
+ИСХОДНЫЙ КОД
+Исходный код Rinse опубликован на GitHub. Продаёт его только автор.
 
 Настройка занимает минуту: откройте Настройки → Приложения → Safari → Расширения (на Mac: Safari → Настройки → Расширения) и включите четыре расширения Rinse. Приложение подскажет по шагам.
 

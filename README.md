@@ -15,7 +15,7 @@
   <img alt="Rules" src="https://img.shields.io/badge/rules-143k-34c759">
   <img alt="Swift" src="https://img.shields.io/badge/Swift-SwiftUI-f05138">
   <img alt="Mac App Store" src="https://img.shields.io/badge/Mac%20App%20Store-v1.0%20%C2%B7%20%241.99-0a84ff">
-  <img alt="License" src="https://img.shields.io/badge/license-GPL--3.0-blue">
+  <img alt="License" src="https://img.shields.io/badge/license-sale%20by%20author%20only-blue">
 </p>
 
 ---
@@ -172,15 +172,15 @@ See [plans/rinse.md](plans/rinse.md) for the roadmap: an element picker ("hide t
 
 ## Price
 
-On the Mac App Store, Rinse is **$1.99**, a one-time purchase. The same purchase is set up to cover iPhone and iPad when those versions are approved. That pays for the developer account and the time spent keeping up with YouTube. The source stays open: you're welcome to build it yourself for free.
+On the Mac App Store, Rinse is **$1.99**, a one-time purchase. The same purchase is set up to cover iPhone and iPad when those versions are approved. That pays for the developer account and the time spent keeping up with YouTube. Only Mikalai Kushner may sell it. Anyone else may build it for personal use.
 
 ## License
 
-Copyright © 2026 Nikolai Kushner.
+Copyright © 2026 Mikalai Kushner.
 
-- **Code:** [GNU GPL v3.0](LICENSE). You may use, study, change and share it. Anything you distribute that's based on it must also be released under the GPL with its source.
-- **Name and icon:** "Rinse" and the Rinse icon are not covered by the GPL. A fork must use its own name and icon.
-- **Filter lists:** [EasyList and EasyPrivacy](https://easylist.to) (CC BY-SA 3.0) and [RU AdList](https://forums.lanik.us/viewforum.php?f=102) (CC BY 3.0). The compiled `blockerList.json` files stay under those licenses. See [LICENSES.md](LICENSES.md).
+- **Code:** [Rinse Source License](LICENSE). Only the author may sell Rinse or put it in an app store. Anyone else may use, study, change, and build it for personal, non-commercial use, and may not sell it.
+- **Name and icon:** "Rinse" and the Rinse icon are not licensed. A fork must use its own name and icon.
+- **Filter lists:** [EasyList and EasyPrivacy](https://easylist.to) (CC BY-SA 3.0) and [RU AdList](https://forums.lanik.us/viewforum.php?f=102) (CC BY 3.0). Those lists are not the author's, and their licenses still allow others to use them. The compiled `blockerList.json` files stay under those licenses. See [LICENSES.md](LICENSES.md).
 
 Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or Google.
 
@@ -200,6 +200,6 @@ Inspired by Vinegar by And a Dinosaur. Rinse is not affiliated with YouTube or G
 
 Сборка: `scripts/run.sh mac` или `scripts/run.sh ios`. Затем включите все четыре расширения в настройках Safari и один раз откройте приложение Rinse.
 
-**Цена и лицензия.** В Mac App Store Rinse стоит $1,99, разовая покупка. Та же покупка покроет iPhone и iPad, когда их версии одобрят. Код открыт под GPL-3.0: его можно собрать самому бесплатно, а форки обязаны оставаться открытыми. Название «Rinse» и иконка под GPL не входят.
+**Цена и лицензия.** В Mac App Store Rinse стоит $1,99, разовая покупка. Та же покупка покроет iPhone и iPad, когда их версии одобрят. Продавать Rinse и выкладывать его в магазин приложений может только автор. Себе собрать для личного пользования можно. Название «Rinse» и иконка в эту лицензию не входят. Списки EasyList, EasyPrivacy и RU AdList чужие, и их лицензии по-прежнему разрешают другим ими пользоваться.
 
 </details>
